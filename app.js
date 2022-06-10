@@ -12,7 +12,7 @@ const authMiddleware = require("./middlewares/auth-middleware");
 
 const port = 8080;
 
-mongoose.connect("mongodb+srv://test:sparta@cluster0.l2ux3.mongodb.net/simple_blog?retryWrites=true&w=majority", {
+mongoose.connect("mongodb+srv://test:sparta@cluster0.l2ux3.mongodb.net/MINI?retryWrites=true&w=majority", {
     useNewUrlParser: true, 
     useUnifiedTopology: true,
     ignoreUndefined: true,
@@ -26,7 +26,7 @@ db.on("error", console.error.bind(console, "connection error:"));
 dotenv.config();
 const app = express();
 const router = express.Router();
-
+app.use(express.json());
 
 /**
  * 전체 게시글 불러오기 API. index.ejs > getArticles()
@@ -257,7 +257,8 @@ router.delete('/comments/:commentId/modify',authMiddleware, async (req, res) => 
 
  const nickname_pattern = /[a-zA-Z0-9]/; // 닉네임은 알파벳 대소문자 (a~z, A~Z), 숫자(0~9) 
  const postUsersSchema = Joi.object({
-    
+    user_id: Joi.string().required(),
+    profile_image: Joi.number().required(),      
      nickname: Joi.string()
          .min(3)
          .pattern(new RegExp(nickname_pattern))
@@ -269,7 +270,8 @@ router.delete('/comments/:commentId/modify',authMiddleware, async (req, res) => 
 router.post("/users", async (req,res) => {
 
     try{
-        const { nickname, password, confirmPassword} = await postUsersSchema.validateAsync(req.body);
+        const { user_id, profile_image, nickname, password, confirmPassword} = await postUsersSchema.validateAsync(req.body);
+        console.log(req.body);
         
         if(password.includes(nickname)){            
             res.status(400).send({    //상태코드가 400보다 작은 것은 client는 성공이라 인식 400(bad request)
@@ -293,7 +295,7 @@ router.post("/users", async (req,res) => {
             });
             return;
         }
-        const user = new User({ nickname, password });
+        const user = new User({user_id, profile_image,nickname, password });
         await user.save();
 
         res.status(201).send({});
