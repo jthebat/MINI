@@ -22,7 +22,7 @@ const postUsersSchema = Joi.object({
     confirmPassword: Joi.string().required(),
 });
 //회원가입 API
-router.post("/users", async (req,res) => {
+router.post("/user/signup", async (req,res) => {
 
    try{
        const { user_id, profile_image, nickname, password, confirmPassword} = await postUsersSchema.validateAsync(req.body);
@@ -68,7 +68,7 @@ router.post("/users", async (req,res) => {
 /**
 *로그인 API 
 */
-router.post("/auth", async(req,res)=>{
+router.post("/user/login", async(req,res)=>{
    try{
 
        const { user_id,password } = req.body;
@@ -99,7 +99,7 @@ router.post("/auth", async(req,res)=>{
 
 //여기가 필요한가 ? 여기가 없으면 로그인 이후 로그인상태가 유지 안된다... ? 이유는 ?
 //let cnt = 0;
-router.get("/users/me",authMiddleware, async (req,res)=>{  // "/users/me" 경로로 들어오는 경우 authMiddleware가 붙는다
+router.get("/user/me",authMiddleware, async (req,res)=>{  // "/users/me" 경로로 들어오는 경우 authMiddleware가 붙는다
    const {user} = res.locals;
    //cnt++;
    //console.log("/users/me 호출테스트",user,cnt);
@@ -111,3 +111,4 @@ router.get("/users/me",authMiddleware, async (req,res)=>{  // "/users/me" 경로
    });
 
 });
+module.exports = router; // app.js의 require()로 리턴. module.exports는 꼭 있어야함.

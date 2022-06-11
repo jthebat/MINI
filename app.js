@@ -1,12 +1,12 @@
 const express = require("express"); //express 모듈 불러오기
+const app = express();
 const connect = require("./models"); // index.js 파일 연결해서 mongoDB 연결
 
-const app = express();
 const port = 8080;
 
 connect(); //mongoDB 연결 실행
 
-const postRouter = require("./routes/board"); // require 함수로 post 모듈(board.js)을 가지고옴.
+const postRouter = require("./routes/post"); // require 함수로 post 모듈(board.js)을 가지고옴.
 
 const userRouter = require("./routes/user"); // require 함수로 user라우터 모듈(user.js)을 가지고옴.
 
@@ -33,10 +33,10 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-app.get("/", async (req, res) => {
-  //console.log("call되면 보여줘"); // '/'로 이동할때마다 들어오는거구나
-  res.status(200).render("index");
-});
+// app.get("/", async (req, res) => {
+//   //console.log("call되면 보여줘"); // '/'로 이동할때마다 들어오는거구나
+//   res.status(200).render("index");
+// });
 
 app.listen(port, () => {
   console.log(port, "번 포트로 서버가 열렸어요!");
